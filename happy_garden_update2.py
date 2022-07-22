@@ -11,6 +11,10 @@ wilted for more than 15 seconds, one of the flowers mutates into a fangflower an
 HACKS AND TWEAKS 
 
 create a raining feature that saves player from having to water the plants
+
+make it so that when ther cow is watering plants, he goes faster and when he runs into the menace, they go slower 
+so its not a game_over anymore
+
 """
 
 #constants
@@ -98,13 +102,15 @@ def wilt_flower():
     if not game_over:
         if not raining:
             if flower_list:
+                for index, flower in enumerate(flower_list): #since whenever it's raining, the countdown clock is still going for flowers, it will cause you to have a gameover prematurely. When it is not raining, reset the time for wilted flowers
+                    if flower.image == 'flower-wilt':
+                        wilted_list[index]=time.time()
+
                 random_num = randint(0,len(flower_list)-1)
                 if flower_list[random_num].image == 'flower':
                     flower_list[random_num].image = 'flower-wilt'
                     wilted_list[random_num] = time.time()
-            print(wilted_list)
-            print(flower_list)
-            clock.schedule(wilt_flower,2) #call this function every 3 seconds
+    clock.schedule(wilt_flower,2) #call this function every 3 seconds
     return
 
 def check_flower_collisions():
@@ -174,6 +180,7 @@ def update():
     fangflower_collision = check_fangflower_collision()
 
     check_wilt_time()
+
     if not game_over:
         if keyboard.space:
             cow.image='cow-water'
